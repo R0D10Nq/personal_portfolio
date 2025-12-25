@@ -1,0 +1,172 @@
+---
+const skillCategories = [
+  {
+    title: 'Backend Core',
+    icon: '⚔️',
+    skills: [
+      { name: 'Python 3.10-3.12', level: 95 },
+      { name: 'Django 5.x + DRF', level: 95 },
+      { name: 'FastAPI', level: 90 },
+      { name: 'SQLAlchemy 2.0', level: 85 },
+      { name: 'Celery', level: 90 },
+      { name: 'asyncio/httpx', level: 80 }
+    ]
+  },
+  {
+    title: 'Databases',
+    icon: '🏯',
+    skills: [
+      { name: 'PostgreSQL', level: 90 },
+      { name: 'Redis', level: 85 },
+      { name: 'MySQL', level: 75 },
+      { name: 'ClickHouse', level: 60 },
+      { name: 'SQLite + FTS5', level: 70 }
+    ]
+  },
+  {
+    title: 'Architecture',
+    icon: '🏗️',
+    skills: [
+      { name: 'Multi-tenant', level: 85 },
+      { name: 'Event-driven', level: 80 },
+      { name: 'Microservices', level: 75 },
+      { name: 'CQRS/Saga', level: 70 },
+      { name: 'REST API Design', level: 90 }
+    ]
+  },
+  {
+    title: 'DevOps & Tools',
+    icon: '🛠️',
+    skills: [
+      { name: 'Docker', level: 85 },
+      { name: 'GitLab CI/GitHub Actions', level: 80 },
+      { name: 'Linux/Nginx', level: 80 },
+      { name: 'Prometheus/Sentry', level: 70 },
+      { name: 'pytest', level: 85 }
+    ]
+  },
+  {
+    title: 'Frontend',
+    icon: '🎨',
+    skills: [
+      { name: 'Vue.js 3', level: 70 },
+      { name: 'React basics', level: 60 },
+      { name: 'SCSS/Tailwind', level: 75 },
+      { name: 'JavaScript ES6+', level: 70 }
+    ]
+  },
+  {
+    title: 'AI/ML Integration',
+    icon: '🤖',
+    skills: [
+      { name: 'LLM APIs (GPT, Gemini)', level: 75 },
+      { name: 'Prompt Engineering', level: 80 },
+      { name: 'Embeddings/RAG', level: 65 },
+      { name: 'Local LLM (Ollama)', level: 70 }
+    ]
+  }
+];
+
+const techStack = [
+  'Python', 'Django', 'FastAPI', 'PostgreSQL', 'Redis', 'Celery',
+  'Docker', 'Git', 'Linux', 'Nginx', 'WebSockets', 'REST API',
+  'pytest', 'SQLAlchemy', 'Pydantic', 'asyncio', 'Kafka', 'RabbitMQ'
+];
+---
+
+<section id="skills" class="py-20 relative bg-cyber-dark/50">
+  <div class="container mx-auto px-4">
+    <!-- section title -->
+    <div class="text-center mb-16">
+      <span class="text-neon-pink/40 font-mono text-sm">// skills</span>
+      <h2 class="section-title mt-2">Навыки</h2>
+    </div>
+
+    <!-- tech stack carousel -->
+    <div class="mb-16 overflow-hidden">
+      <div class="flex animate-scroll gap-4">
+        {[...techStack, ...techStack].map((tech) => (
+          <div class="flex-shrink-0 px-6 py-3 bg-cyber-gray/50 border border-neon-blue/20 rounded font-mono text-neon-blue text-sm">
+            {tech}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- skills grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {skillCategories.map((cat) => (
+        <div class="card-cyber p-6 rounded-lg">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-3xl">{cat.icon}</span>
+            <h3 class="text-xl font-semibold text-white">{cat.title}</h3>
+          </div>
+          
+          <div class="space-y-4">
+            {cat.skills.map((skill) => (
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-sm text-gray-300">{skill.name}</span>
+                  <span class="text-xs text-neon-pink font-mono">{skill.level}%</span>
+                </div>
+                <div class="h-2 bg-cyber-gray rounded-full overflow-hidden">
+                  <div 
+                    class="h-full bg-gradient-to-r from-neon-pink to-neon-purple rounded-full transition-all duration-1000"
+                    style={`width: ${skill.level}%`}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- soft skills -->
+    <div class="mt-16">
+      <h3 class="text-xl font-mono text-neon-blue mb-8 text-center">Soft Skills</h3>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center p-6 card-cyber rounded-lg">
+          <div class="text-3xl mb-3">🗣️</div>
+          <h4 class="font-semibold text-white mb-2">Коммуникация</h4>
+          <p class="text-sm text-gray-400">Переводит технические вопросы на язык бизнеса</p>
+        </div>
+        <div class="text-center p-6 card-cyber rounded-lg">
+          <div class="text-3xl mb-3">🤝</div>
+          <h4 class="font-semibold text-white mb-2">Teamwork</h4>
+          <p class="text-sm text-gray-400">Эмпатичный командный игрок, code reviewer</p>
+        </div>
+        <div class="text-center p-6 card-cyber rounded-lg">
+          <div class="text-3xl mb-3">📚</div>
+          <h4 class="font-semibold text-white mb-2">Обучаемость</h4>
+          <p class="text-sm text-gray-400">Junior → Middle за 8 месяцев</p>
+        </div>
+        <div class="text-center p-6 card-cyber rounded-lg">
+          <div class="text-3xl mb-3">🎯</div>
+          <h4 class="font-semibold text-white mb-2">Problem Solving</h4>
+          <p class="text-sm text-gray-400">Legacy migrations, performance tuning</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- decorative -->
+  <div class="absolute bottom-20 right-10 text-9xl text-neon-purple/5 font-mono select-none hidden lg:block">
+    力
+  </div>
+</section>
+
+<style>
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  
+  .animate-scroll {
+    animation: scroll 20s linear infinite;
+  }
+  
+  .animate-scroll:hover {
+    animation-play-state: paused;
+  }
+</style>

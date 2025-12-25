@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* fonts */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-cyber-black text-gray-100 font-sans;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  ::selection {
+    @apply bg-neon-pink/30 text-white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-cyber-dark;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neon-pink/50 rounded;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-neon-pink;
+  }
+}
+
+@layer components {
+  .neon-text {
+    text-shadow: 
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 20px currentColor;
+  }
+  
+  .neon-box {
+    box-shadow: 
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      inset 0 0 5px currentColor;
+  }
+  
+  .glitch {
+    position: relative;
+  }
+  
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .glitch::before {
+    color: #ff006e;
+    animation: glitch-1 0.3s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    transform: translate(-2px);
+  }
+  
+  .glitch::after {
+    color: #00d9ff;
+    animation: glitch-2 0.3s infinite;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    transform: translate(2px);
+  }
+  
+  .cyber-border {
+    @apply border border-neon-pink/30;
+    clip-path: polygon(
+      0 10px, 10px 0, calc(100% - 10px) 0, 100% 10px,
+      100% calc(100% - 10px), calc(100% - 10px) 100%, 
+      10px 100%, 0 calc(100% - 10px)
+    );
+  }
+  
+  .btn-samurai {
+    @apply relative px-6 py-3 font-mono text-sm uppercase tracking-wider;
+    @apply bg-gradient-to-r from-neon-pink to-neon-purple;
+    @apply text-white transition-all duration-300;
+    clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+  }
+  
+  .btn-samurai:hover {
+    @apply scale-105;
+    box-shadow: 0 0 30px rgba(255, 0, 110, 0.6);
+  }
+  
+  .card-cyber {
+    @apply bg-cyber-dark/80 backdrop-blur-sm;
+    @apply border border-neon-pink/20;
+    @apply transition-all duration-300;
+  }
+  
+  .card-cyber:hover {
+    @apply border-neon-pink/60;
+    box-shadow: 0 0 30px rgba(255, 0, 110, 0.2);
+  }
+  
+  .section-title {
+    @apply font-mono text-3xl md:text-4xl font-bold;
+    @apply bg-gradient-to-r from-neon-pink via-neon-purple to-neon-blue;
+    @apply bg-clip-text text-transparent;
+  }
+  
+  .kanji-decoration {
+    @apply font-mono text-neon-pink/20 text-6xl absolute select-none pointer-events-none;
+  }
+}
+
+@keyframes glitch-1 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-3px, 3px); }
+  40% { transform: translate(-3px, -3px); }
+  60% { transform: translate(3px, 3px); }
+  80% { transform: translate(3px, -3px); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(3px, -3px); }
+  40% { transform: translate(3px, 3px); }
+  60% { transform: translate(-3px, -3px); }
+  80% { transform: translate(-3px, 3px); }
+}
+
+/* matrix rain effect */
+.matrix-column {
+  position: absolute;
+  top: -100%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: #00d9ff;
+  opacity: 0.3;
+  animation: matrix-fall 8s linear infinite;
+  white-space: nowrap;
+}
+
+/* scan line overlay */
+.scan-lines::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+}
+
+/* tech badge */
+.tech-badge {
+  @apply inline-flex items-center px-3 py-1;
+  @apply bg-cyber-gray/50 border border-neon-blue/30;
+  @apply text-neon-blue text-xs font-mono;
+  @apply transition-all duration-200;
+}
+
+.tech-badge:hover {
+  @apply border-neon-blue bg-neon-blue/10;
+}
