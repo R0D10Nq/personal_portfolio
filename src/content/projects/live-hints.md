@@ -1,158 +1,63 @@
 ---
 title: "Live Hints"
 subtitle: "Desktop AI Interview Assistant"
-description: "Windows overlay для real-time транскрипции аудио и генерации AI-подсказок. Локальный STT + LLM для полной приватности."
-tags: ["Python", "PyQt5", "faster-whisper", "Ollama", "WebSocket"]
-tier: 2
+description: "Windows desktop overlay для транскрипции системного звука и генерации AI-подсказок в реальном времени. Локальный STT через faster-whisper + LLM через Ollama."
+tags: ["Electron", "Python", "faster-whisper", "Ollama", "WebSocket", "CUDA"]
+tier: 1
 featured: true
-github: "https://github.com/R0D10Nq"
+github: "https://github.com/R0D10Nq/live-hints"
 metrics:
-  - label: "STT Latency"
+  - label: "STT латентность"
     value: "~300ms"
   - label: "LLM TTFT"
     value: "2-3s"
   - label: "End-to-End"
     value: "3-4s"
-  - label: "Accuracy"
-    value: "85%+"
+  - label: "Провайдеров"
+    value: "10+"
 highlights:
-  - "WASAPI loopback + GPU-accelerated Whisper"
-  - "Ollama LLM с streaming генерацией"
-  - "LRU кэш: экономия 60% вычислений"
-publishedAt: 2024-06-10
+  - "WASAPI loopback захват системного аудио"
+  - "GPU-accelerated Whisper distil-large-v3"
+  - "LRU кэш подсказок для мгновенных повторов"
+  - "Поддержка 10+ LLM провайдеров (OpenAI, Gemini, GigaChat, Ollama)"
+publishedAt: 2024-12-01
 ---
 
-## Обзор проекта
+## Обзор
 
-Desktop приложение для real-time транскрипции системного аудио и генерации AI-подсказок на технических собеседованиях. Полностью локальное решение для приватности.
+Desktop приложение для real-time транскрипции системного аудио и генерации AI-подсказок. Полностью локальное решение с опциональными облачными провайдерами.
 
-## Проблема
+## Возможности
 
-- Технические собеседования требуют быстрого доступа к информации
-- Облачные решения небезопасны (утечка данных)
-- Нужна низкая латентность (< 5 секунд end-to-end)
+- Захват системного аудио через WASAPI loopback
+- Realtime транскрипция через faster-whisper distil-large-v3 (локально на GPU)
+- Streaming генерация подсказок через LLM с TTFT 2-3 секунды
+- Markdown рендеринг подсказок
+- Классификация вопросов (experience / technical / general)
+- Always-on-top overlay поверх всех приложений
+- История сессий с сохранением транскриптов
 
-## Архитектура
-
-```
-┌─────────────────┐
-│ System Audio    │
-│ (WASAPI)        │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐     ┌─────────────────┐
-│ STT Server      │────▶│ Transcript      │
-│ (faster-whisper)│     │ Buffer          │
-└─────────────────┘     └────────┬────────┘
-                                 │
-                                 ▼
-                        ┌─────────────────┐
-                        │ LLM Server      │
-                        │ (Ollama)        │
-                        └────────┬────────┘
-                                 │
-                                 ▼
-                        ┌─────────────────┐
-                        │ PyQt5 Overlay   │
-                        │ (Always-on-top) │
-                        └─────────────────┘
-```
-
-## Технические решения
-
-### 1. Real-time STT
-
-```python
-# WebSocket streaming транскрипция
-async def transcribe_stream(websocket: WebSocket):
-    await websocket.accept()
-    audio_buffer = bytearray()
-    
-    async for chunk in websocket.iter_bytes():
-        audio_buffer.extend(chunk)
-        
-        if len(audio_buffer) >= CHUNK_SIZE:
-            segments = model.transcribe(audio_buffer)
-            for segment in segments:
-                await websocket.send_json({
-                    "text": segment.text,
-                    "confidence": segment.confidence
-                })
-            audio_buffer.clear()
-```
-
-**Выбор модели:**
-
-- faster-whisper distil-large-v3
-- GPU acceleration (CUDA)
-- ~300ms латентность
-
-### 2. LLM Streaming
-
-```python
-# Ollama streaming response
-async def generate_hint(question: str):
-    cached = hint_cache.get(hash(question))
-    if cached:
-        return cached
-    
-    async for chunk in ollama.generate(
-        model="llama3.2",
-        prompt=build_prompt(question),
-        stream=True
-    ):
-        yield chunk
-    
-    hint_cache.set(hash(question), full_response)
-```
-
-### 3. Always-on-top Overlay
-
-- PyQt5 frameless window
-- Transparent background
-- Click-through support
-- Drag to reposition
-
-## Оптимизации
-
-### LRU Cache
-
-```python
-from functools import lru_cache
-
-@lru_cache(maxsize=100)
-def get_hint_cached(question_hash: str):
-    return generate_hint(question_hash)
-```
-
-- Экономия 60% вычислений
-- Мгновенные повторы
-
-### Memory Management
-
-- Streaming audio processing
-- Chunked transcription
-- GPU memory optimization
-
-## Результаты
+## Метрики производительности
 
 | Метрика | Значение |
-|---------|----------|
-| STT Latency | ~300ms |
-| LLM TTFT | 2-3s |
-| Total End-to-End | 3-4s (perceived) |
-| Cache Hit Rate | 40% |
-| Transcription Accuracy | 85%+ |
+| --- | --- |
+| STT латентность | ~300ms (distil-large-v3) |
+| LLM TTFT | 2-3s (streaming) |
+| LLM total | 18-25s |
+| End-to-end perceived | 3-4s |
 
-## Lessons Learned
+## Поддерживаемые LLM провайдеры
 
-1. **GPU acceleration критична** для real-time STT
-2. **LRU кэш** экономит 60% вычислений
-3. **PyQt5 overlay** сложнее чем кажется (Z-order issues)
+**Локально:** Ollama (бесплатно, требует GPU)
 
-## Что бы сделал иначе
+**Облачные:** OpenAI, Gemini, Claude, OpenRouter
 
-- PostgreSQL вместо SQLite для истории
-- gRPC вместо WebSocket (lower latency)
-- Electron вместо PyQt5 (лучший DX)
+**Российские:** GigaChat Free/Max, Yandex Lite
+
+## Технологии
+
+- **Frontend:** Electron + HTML/CSS/JS
+- **Backend:** Python, FastAPI, WebSocket
+- **STT:** faster-whisper с CUDA acceleration
+- **LLM:** Ollama / облачные API
+- **Audio:** WASAPI loopback capture

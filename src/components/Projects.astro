@@ -1,118 +1,20 @@
 ---
-const projects = [
-  {
-    title: 'Django Landings Platform',
-    subtitle: 'Multi-tenant платформа лендингов',
-    description: 'Корпоративная платформа для массового создания и управления лендингами. 400+ активных лендингов, 2M+ посетителей/месяц.',
-    tags: ['Django 5.x', 'PostgreSQL', 'Redis', 'Celery', 'Webpack'],
-    metrics: [
-      { label: 'Лендингов', value: '400+' },
-      { label: 'Посетителей/мес', value: '2M+' },
-      { label: 'Uptime', value: '99.9%' },
-      { label: 'Response time', value: '<150ms' }
-    ],
-    highlights: [
-      'Автоматизация создания: с 2-3 дней до 30 минут (-93%)',
-      'WebP pipeline + lazy loading: LCP -40%',
-      'A/B тестирование с preview: конверсия +15%'
-    ],
-    github: null,
-    tier: 1
-  },
-  {
-    title: 'RAP Analytics Platform',
-    subtitle: 'Рекламно-аналитическая платформа',
-    description: 'Highload платформа для управления рекламными кампаниями. ETL pipeline для 15+ рекламных платформ, 100GB+ данных/день.',
-    tags: ['FastAPI', 'PostgreSQL', 'ClickHouse', 'Celery', 'Redis'],
-    metrics: [
-      { label: 'Requests/min', value: '10K+' },
-      { label: 'Uptime', value: '99.9%' },
-      { label: 'P95 Response', value: '<100ms' },
-      { label: 'Данных/день', value: '100GB+' }
-    ],
-    highlights: [
-      'ETL для 15+ рекламных API (Google, Facebook, Yandex)',
-      'Время отчетов: 5 минут → 3 секунды',
-      'RBAC + client isolation для 500+ клиентов'
-    ],
-    github: null,
-    tier: 1
-  },
-  {
-    title: 'Live Hints',
-    subtitle: 'Desktop AI Interview Assistant',
-    description: 'Windows overlay для real-time транскрипции аудио и генерации AI-подсказок. Локальный STT + LLM для полной приватности.',
-    tags: ['Python', 'PyQt5', 'faster-whisper', 'Ollama', 'WebSocket'],
-    metrics: [
-      { label: 'STT Latency', value: '~300ms' },
-      { label: 'LLM TTFT', value: '2-3s' },
-      { label: 'End-to-End', value: '3-4s' },
-      { label: 'Accuracy', value: '85%+' }
-    ],
-    highlights: [
-      'WASAPI loopback + GPU-accelerated Whisper',
-      'Ollama LLM с streaming генерацией',
-      'LRU кэш: экономия 60% вычислений'
-    ],
-    github: 'https://github.com/R0D10Nq',
-    tier: 2
-  },
-  {
-    title: 'Order Management System',
-    subtitle: 'Event-driven E-commerce',
-    description: 'Микросервисная архитектура для e-commerce с Saga Pattern, CQRS и распределенными транзакциями.',
-    tags: ['FastAPI', 'Kafka', 'PostgreSQL', 'OpenTelemetry', 'Protobuf'],
-    metrics: [
-      { label: 'Success Rate', value: '99.7%' },
-      { label: 'Сервисов', value: '4' },
-      { label: 'Incidents', value: '0' },
-      { label: 'Scaling', value: 'Horizontal' }
-    ],
-    highlights: [
-      'Saga orchestration для распределенных транзакций',
-      'Outbox/Inbox patterns + идемпотентность',
-      'Jaeger tracing + Prometheus metrics'
-    ],
-    github: 'https://github.com/R0D10Nq',
-    tier: 2
-  },
-  {
-    title: 'AI Mood Diary Bot',
-    subtitle: 'Telegram Bot + ML',
-    description: 'Telegram бот для отслеживания настроения с AI анализом через Google Gemini. Vue.js дашборд с визуализацией трендов.',
-    tags: ['aiogram', 'FastAPI', 'Gemini API', 'PostgreSQL', 'Vue.js'],
-    metrics: [
-      { label: 'Пользователей', value: '2000+' },
-      { label: 'AI Accuracy', value: '~78%' },
-      { label: 'Активных дней', value: '30+' }
-    ],
-    highlights: [
-      'Webhook-based Telegram deployment',
-      'Корреляционный анализ настроения',
-      'AES-256 шифрование данных'
-    ],
-    github: 'https://github.com/R0D10Nq',
-    tier: 2
-  },
-  {
-    title: 'Portable Doc Search',
-    subtitle: 'Document Search Engine',
-    description: 'Система полнотекстового поиска по PDF/MD документации. SQLite FTS5 с BM25 ранжированием.',
-    tags: ['FastAPI', 'SQLite FTS5', 'Vue.js', 'Typer CLI'],
-    metrics: [
-      { label: 'Документов', value: '500+' },
-      { label: 'Response', value: '<200ms' },
-      { label: 'Queries', value: '90%' }
-    ],
-    highlights: [
-      'PyPDF2 + markdown parsing pipeline',
-      'Custom BM25-подобное ранжирование',
-      'JWT авторизация + RBAC'
-    ],
-    github: 'https://github.com/R0D10Nq',
-    tier: 3
-  }
-];
+import { getCollection } from 'astro:content';
+
+const projectsCollection = await getCollection('projects');
+const projects = projectsCollection
+  .sort((a, b) => a.data.tier - b.data.tier)
+  .map(p => ({
+    title: p.data.title,
+    subtitle: p.data.subtitle,
+    description: p.data.description,
+    tags: p.data.tags,
+    metrics: p.data.metrics,
+    highlights: p.data.highlights,
+    github: p.data.github || null,
+    tier: p.data.tier,
+    slug: p.slug
+  }));
 ---
 
 <section id="projects" class="py-20 relative">
@@ -185,8 +87,17 @@ const projects = [
           </div>
 
           <!-- footer -->
-          {project.github && (
-            <div class="px-6 py-4 border-t border-neon-pink/10">
+          <div class="px-6 py-4 border-t border-neon-pink/10 flex items-center justify-between">
+            <a 
+              href={`/personal_portfolio/projects/${project.slug}/`}
+              class="inline-flex items-center gap-2 text-neon-pink hover:text-neon-blue transition-colors text-sm font-mono"
+            >
+              Подробнее
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+            {project.github && (
               <a 
                 href={project.github}
                 target="_blank"
@@ -198,8 +109,8 @@ const projects = [
                 </svg>
                 GitHub
               </a>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       ))}
     </div>
