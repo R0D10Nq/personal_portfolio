@@ -1,18 +1,19 @@
 ---
-// hero section
+import GlitchText from './GlitchText.svelte';
+import TypeWriter from './TypeWriter.svelte';
+import MatrixRain from './MatrixRain.svelte';
+import NeonGrid from './NeonGrid.svelte';
 ---
 
 <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
   <!-- bg effects -->
   <div class="absolute inset-0 bg-gradient-to-b from-cyber-black via-cyber-dark to-cyber-black"></div>
   
-  <!-- grid overlay -->
-  <div class="absolute inset-0 opacity-20" 
-       style="background-image: linear-gradient(rgba(255,0,110,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,0,110,0.1) 1px, transparent 1px); background-size: 60px 60px;">
-  </div>
-
-  <!-- matrix rain container -->
-  <div id="matrix-rain" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+  <!-- Svelte Neon Grid -->
+  <NeonGrid client:load />
+  
+  <!-- Svelte Matrix Rain -->
+  <MatrixRain client:load />
   
   <!-- scan line -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -22,35 +23,32 @@
   <!-- content -->
   <div class="relative z-10 container mx-auto px-4 text-center">
     <!-- kanji decoration -->
-    <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-8xl md:text-9xl font-mono text-neon-pink/5 select-none">
+    <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-8xl md:text-9xl font-mono text-neon-pink/5 select-none animate-pulse-slow">
       侍
     </div>
 
-    <!-- main title -->
+    <!-- main title with Svelte Glitch -->
     <div class="mb-6">
-      <h1 class="glitch text-4xl md:text-6xl lg:text-7xl font-mono font-bold text-white mb-2" data-text="< Backend Samurai />">
-        &lt; Backend Samurai /&gt;
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-mono font-bold text-white mb-2">
+        <GlitchText client:load text="< Backend Samurai />" tag="span" />
       </h1>
       <p class="text-neon-pink/60 font-mono text-lg md:text-xl">
         侍 開発者
       </p>
     </div>
 
-    <!-- subtitle -->
+    <!-- subtitle with TypeWriter -->
     <div class="mb-8">
       <h2 class="text-xl md:text-2xl text-gray-300 font-light mb-4">
         Python Backend Developer
       </h2>
-      <div class="flex flex-wrap justify-center gap-2 md:gap-4 text-sm md:text-base font-mono text-neon-blue">
-        <span>Django</span>
-        <span class="text-neon-pink">•</span>
-        <span>FastAPI</span>
-        <span class="text-neon-pink">•</span>
-        <span>PostgreSQL</span>
-        <span class="text-neon-pink">•</span>
-        <span>Redis</span>
-        <span class="text-neon-pink">•</span>
-        <span>Celery</span>
+      <div class="flex flex-wrap justify-center gap-2 md:gap-4 text-sm md:text-base font-mono">
+        <TypeWriter 
+          client:load 
+          texts={['Django', 'FastAPI', 'PostgreSQL', 'Redis', 'Celery', 'Kafka', 'Docker']} 
+          typingSpeed={80}
+          pauseTime={1500}
+        />
       </div>
     </div>
 
@@ -99,31 +97,3 @@
     </div>
   </div>
 </section>
-
-<script>
-  // matrix rain effect
-  function createMatrixRain() {
-    const container = document.getElementById('matrix-rain');
-    if (!container) return;
-    
-    const chars = '侍刀力心道武士龍虎風雷火水01';
-    const columns = Math.floor(window.innerWidth / 30);
-    
-    for (let i = 0; i < columns; i++) {
-      const column = document.createElement('div');
-      column.className = 'matrix-column';
-      column.style.left = `${i * 30}px`;
-      column.style.animationDelay = `${Math.random() * 5}s`;
-      column.style.animationDuration = `${5 + Math.random() * 5}s`;
-      
-      let text = '';
-      for (let j = 0; j < 20; j++) {
-        text += chars[Math.floor(Math.random() * chars.length)] + '\n';
-      }
-      column.textContent = text;
-      container.appendChild(column);
-    }
-  }
-  
-  createMatrixRain();
-</script>
