@@ -1,19 +1,18 @@
 ---
-import GlitchText from './GlitchText.svelte';
-import TypeWriter from './TypeWriter.svelte';
-import MatrixRain from './MatrixRain.svelte';
-import NeonGrid from './NeonGrid.svelte';
+// Hero section
 ---
 
 <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
   <!-- bg effects -->
   <div class="absolute inset-0 bg-gradient-to-b from-cyber-black via-cyber-dark to-cyber-black"></div>
   
-  <!-- Svelte Neon Grid -->
-  <NeonGrid client:load />
-  
-  <!-- Svelte Matrix Rain -->
-  <MatrixRain client:load />
+  <!-- grid overlay -->
+  <div class="absolute inset-0 opacity-20" 
+       style="background-image: linear-gradient(rgba(255,0,110,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,0,110,0.1) 1px, transparent 1px); background-size: 60px 60px;">
+  </div>
+
+  <!-- matrix rain container -->
+  <div id="matrix-rain" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
   
   <!-- scan line -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -23,32 +22,35 @@ import NeonGrid from './NeonGrid.svelte';
   <!-- content -->
   <div class="relative z-10 container mx-auto px-4 text-center">
     <!-- kanji decoration -->
-    <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-8xl md:text-9xl font-mono text-neon-pink/5 select-none animate-pulse-slow">
+    <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-8xl md:text-9xl font-mono text-neon-pink/5 select-none">
       侍
     </div>
 
-    <!-- main title with Svelte Glitch -->
+    <!-- main title -->
     <div class="mb-6">
-      <h1 class="text-4xl md:text-6xl lg:text-7xl font-mono font-bold text-white mb-2">
-        <GlitchText client:load text="< Backend Samurai />" tag="span" />
+      <h1 class="glitch text-4xl md:text-6xl lg:text-7xl font-mono font-bold text-white mb-2" data-text="< Backend Samurai />">
+        &lt; Backend Samurai /&gt;
       </h1>
       <p class="text-neon-pink/60 font-mono text-lg md:text-xl">
         侍 開発者
       </p>
     </div>
 
-    <!-- subtitle with TypeWriter -->
+    <!-- subtitle -->
     <div class="mb-8">
       <h2 class="text-xl md:text-2xl text-gray-300 font-light mb-4">
         Python Backend Developer
       </h2>
-      <div class="flex flex-wrap justify-center gap-2 md:gap-4 text-sm md:text-base font-mono">
-        <TypeWriter 
-          client:load 
-          texts={['Django', 'FastAPI', 'PostgreSQL', 'Redis', 'Celery', 'Kafka', 'Docker']} 
-          typingSpeed={80}
-          pauseTime={1500}
-        />
+      <div class="flex flex-wrap justify-center gap-2 md:gap-4 text-sm md:text-base font-mono text-neon-blue">
+        <span>Django</span>
+        <span class="text-neon-pink">•</span>
+        <span>FastAPI</span>
+        <span class="text-neon-pink">•</span>
+        <span>PostgreSQL</span>
+        <span class="text-neon-pink">•</span>
+        <span>Redis</span>
+        <span class="text-neon-pink">•</span>
+        <span>Celery</span>
       </div>
     </div>
 
